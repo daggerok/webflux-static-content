@@ -1,0 +1,9 @@
+= webflux-static-content image:https://travis-ci.org/daggerok/webflux-static-content.svg?branch=master["Build Status", link="https://travis-ci.org/daggerok/webflux-static-content"]
+
+----
+bash gradlew bootRun --parallel
+http :8001
+http :8001/api/v1
+http :8001/style.css
+http :8001/404
+----

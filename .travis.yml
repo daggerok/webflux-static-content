@@ -1,0 +1,28 @@
+group: edge
+dist: trusty
+
+language: java
+java:
+  - oraclejdk8
+  - openjdk8
+
+install: true
+before_install:
+  - sudo apt update
+  - sudo apt install -y curl
+
+script:
+  - bash gradlew clean build
+  - bash gradlew bootRun --parallel &
+  - sleep 20
+  - curl http://localhost:8001/
+  - curl http://localhost:8001/api/v1
+  - curl http://localhost:8001/style.css
+  - curl http://localhost:8001/404
+
+after_script: bash gradlew --stop
+
+cache:
+  directories:
+    - $HOME/.m2
+    - $HOME/.gradle
