@@ -25,7 +25,7 @@ before_install:
 
 script:
   - bash gradlew clean build
-  - java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XshowSettings:vm -jar java/build/libs/*.jar
+  - java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XshowSettings:vm -jar java/build/libs/*.jar &
   - wait_for 8001
   - curl http://localhost:8001/
   - curl http://localhost:8001/api/v1
