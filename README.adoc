@@ -1,5 +1,26 @@
 = webflux-static-content image:https://travis-ci.org/daggerok/webflux-static-content.svg?branch=master["Build Status", link="https://travis-ci.org/daggerok/webflux-static-content"]
 
+//tag::content[]
+
+.docker
+[source,bash]
+----
+docker-compose down -v; ./gradlew clean build; docker-compose up --build --force-recreate --remove-orphans
+
+# or
+bash ./gradlew clean build;
+docker-compose up --build --force-recreate --remove-orphans
+
+http :8001
+http :8001/api/v1
+http :8001/style.css
+http :8001/404
+
+docker-compose down -v
+----
+
+.test
+[source,bash]
 ----
 bash gradlew bootRun --parallel
 http :8001
@@ -7,3 +28,5 @@ http :8001/api/v1
 http :8001/style.css
 http :8001/404
 ----
+
+//end::content[]

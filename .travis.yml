@@ -1,24 +1,46 @@
-group: edge
-dist: trusty
+sudo: required
+group: travis_lts
+
+env:
+  global:
+    TERM=dumb
 
 language: java
-java:
-  - oraclejdk8
+jdk:
   - openjdk8
+  - oraclejdk8
 
 install: true
 before_install:
+
+  # install docker / compose
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
   - sudo apt update
-  - sudo apt install -y curl
+  - sudo apt -y install docker-ce python-pip curl jq libxml2-utils
+  - sudo pip install docker-compose httpie
+  - sudo usermod -aG docker $(whoami)
+
+  - source <(curl -s https://raw.githubusercontent.com/daggerok/bash-functions/master/main.bash)
 
 script:
   - bash gradlew clean build
   - bash gradlew bootRun --parallel &
+  - wait_for 8001
+  - curl http://localhost:8001/
+  - curl http://localhost:8001/api/v1
+  - curl http://localhost:8001/style.css
+  - curl http://localhost:8001/404
+  - stop_any 8001
+
+  - docker-compose build --force-rm --no-cache --pull
+  - docker-compose up --force-recreate --remove-orphans &
   - sleep 20
   - curl http://localhost:8001/
   - curl http://localhost:8001/api/v1
   - curl http://localhost:8001/style.css
   - curl http://localhost:8001/404
+  - docker-compose down -v
 
 after_script: bash gradlew --stop
 
